@@ -46,7 +46,8 @@ nav small { display: block; color: var(--lime); margin-bottom: .2rem; }
 h1, h2, h3, p { margin-top: 0; }
 h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; }
 h1 { max-width: 14ch; margin: 1.4rem 0 2.2rem; font-size: clamp(3.5rem, 7.6vw, 7.5rem); line-height: .93; letter-spacing: -.065em; font-weight: 600; }
-h1 em, h2 em { color: var(--lime); font-weight: 500; }
+h1 em, h2 em { color: var(--moss); font-weight: 500; }
+.hero h1 em, .photo-feature h2 em { color: var(--lime); }
 .hero-rule { display: flex; gap: .75rem; align-items: center; opacity: .93; }
 .hero-rule i { width: 3.5rem; height: 1px; background: currentColor; }
 .scroll-cue { position: absolute; z-index: 1; bottom: 2rem; right: clamp(1.25rem, 5vw, 5.5rem); display: grid; gap: .5rem; color: inherit; text-decoration: none; text-transform: uppercase; font: .65rem 'DM Mono', monospace; letter-spacing: .08em; text-align: center; }
@@ -70,8 +71,8 @@ h1 em, h2 em { color: var(--lime); font-weight: 500; }
 .section-label > span { white-space: nowrap; }
 .section-layout { display: grid; grid-template-columns: 5rem minmax(0, 1fr); gap: clamp(1rem, 3vw, 4rem); }
 .section-number { color: var(--green); font: 500 .78rem 'DM Mono', monospace; letter-spacing: .08em; padding-top: .75rem; }
-.section-copy { max-width: 59rem; }
-.section-copy h2 { max-width: 17ch; margin-bottom: 2rem; font-size: clamp(2.4rem, 4.8vw, 5.3rem); line-height: .96; letter-spacing: -.062em; }
+.section-copy { min-width: 0; max-width: 59rem; }
+.section-copy h2 { max-width: 17ch; margin-bottom: 2rem; font-size: clamp(2.4rem, 4.8vw, 5.3rem); line-height: .96; letter-spacing: -.062em; overflow-wrap: anywhere; }
 .section-copy p { font-size: clamp(1rem, 1.45vw, 1.18rem); line-height: 1.72; }
 .paragraphs { max-width: 49rem; }
 .paragraphs p + p { margin-top: 1.35rem; }
@@ -97,8 +98,8 @@ h1 em, h2 em { color: var(--lime); font-weight: 500; }
 .gallery-heading .section-label { margin-top: .5rem; }
 .gallery-heading h2 { margin: 0; }
 .gallery-heading > p:last-child { padding-top: .55rem; }
-.gallery-grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: clamp(5rem, 10vw, 11rem); gap: 1rem; max-width: 96rem; margin: auto; }
-.gallery-item { position: relative; border: 0; padding: 0; overflow: hidden; background: var(--ink); }
+.gallery-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: clamp(5rem, 10vw, 11rem); gap: 1rem; max-width: 96rem; margin: auto; }
+.gallery-item { position: relative; min-width: 0; border: 0; padding: 0; overflow: hidden; background: var(--ink); }
 .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .55s cubic-bezier(.22,.61,.36,1), opacity .3s ease; }
 .gallery-item:hover img, .gallery-item:focus-visible img { transform: scale(1.06); opacity: .86; }
 .gallery-item span { position: absolute; right: .7rem; top: .6rem; display: grid; place-items: center; width: 2rem; height: 2rem; border: 1px solid rgba(255,255,255,.6); border-radius: 50%; color: white; opacity: 0; transform: translateY(.4rem); transition: .25s ease; }
@@ -150,6 +151,9 @@ footer a { color: var(--lime); text-decoration: none; }
 @media (max-width: 570px) {
   .hero { min-height: 39rem; }
   h1 { max-width: 100%; font-size: clamp(2.35rem, 10vw, 3.5rem); overflow-wrap: anywhere; }
+  .map-intro h2, .gallery-heading h2 { max-width: 100%; font-size: clamp(2.15rem, 8.5vw, 2.7rem); overflow-wrap: anywhere; }
+  .section-copy h2 { max-width: 100%; font-size: clamp(1.6rem, 6.5vw, 2.15rem); letter-spacing: -.045em; }
+  .section-layout { grid-template-columns: 2rem minmax(0, 1fr); gap: .65rem; }
   .hero-rule { font-size: .55rem; gap: .4rem; }
   .hero-rule i { width: 1.5rem; }
   .service-grid { grid-template-columns: 1fr; }
@@ -162,4 +166,7 @@ footer a { color: var(--lime); text-decoration: none; }
   .gallery-small { grid-column: span 4; }
   footer { align-items: flex-start; flex-wrap: wrap; }
   footer p { flex-basis: 70%; }
+}
+@media (max-width: 360px) {
+  .section-copy h2 { font-size: clamp(1.15rem, 5.8vw, 1.35rem); }
 }
