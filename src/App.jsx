@@ -150,7 +150,7 @@ function App() {
 
       <main id="contenido">
         <section id="inicio" className="hero" aria-labelledby="hero-title">
-          <div className="hero-photo" role="img" aria-label="Laguna del Ecoparque Jardín Botánico Armando Dugand Gnecco" />
+          <img className="hero-photo" src="./assets/laguna-patos.png" alt="" />
           <div className="hero-shade" />
           <div className="hero-content">
             <p className="hero-kicker">Guía digital · Barranquilla</p>
