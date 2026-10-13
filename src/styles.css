@@ -16,7 +16,7 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--paper); }
+body { margin: 0; overflow-x: hidden; background: var(--paper); }
 button, a { font: inherit; }
 button { cursor: pointer; }
 img { display: block; max-width: 100%; }
@@ -38,7 +38,7 @@ nav small { display: block; color: var(--lime); margin-bottom: .2rem; }
 
 .hero { position: relative; min-height: 49rem; height: min(100vh, 58rem); display: grid; align-items: end; overflow: hidden; background: var(--ink); color: var(--cream); }
 .hero-photo { position: absolute; inset: 0; background: url('/assets/laguna-patos.png') center/cover no-repeat; filter: saturate(.88); animation: heroIn 1.4s cubic-bezier(.22,.61,.36,1) both; }
-.hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(4, 21, 15, .76) 0%, rgba(5, 34, 24, .12) 34%, rgba(5, 26, 18, .76) 100%); }
+.hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(4, 21, 15, .57) 0%, rgba(5, 34, 24, .12) 34%, rgba(5, 26, 18, .66) 100%); }
 .hero-content { position: relative; z-index: 1; width: min(84rem, 100%); padding: 0 clamp(1.25rem, 10vw, 11rem) 9rem; }
 .hero-kicker, .section-label, .hero-rule { text-transform: uppercase; font: 500 .69rem 'DM Mono', monospace; letter-spacing: .1em; }
 .hero-kicker { display: flex; align-items: center; gap: .75rem; color: var(--lime); }
@@ -149,6 +149,7 @@ footer a { color: var(--lime); text-decoration: none; }
 }
 @media (max-width: 570px) {
   .hero { min-height: 39rem; }
+  h1 { max-width: 100%; font-size: clamp(2.75rem, 11vw, 3.5rem); overflow-wrap: anywhere; }
   .hero-rule { font-size: .55rem; gap: .4rem; }
   .hero-rule i { width: 1.5rem; }
   .service-grid { grid-template-columns: 1fr; }
