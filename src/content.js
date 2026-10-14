@@ -61,7 +61,7 @@ export const guideSections = [
       'El artículo 5 de esta ley, nos define la convivencia como interacción pacífica, armoniosa y respetuosa entre las personas, los bienes y el ambiente, es decir, la convivencia no solo consiste en evitar discusiones y agresiones, sino también el poder relacionarnos adecuadamente con los demás, con la naturaleza y en los espacios que utilizamos.',
       'Acciones como evitar dañar las plantas, respetas las instalaciones y permitir que otras personas disfruten tranquilamente del lugar, son una forma de respetar los derechos colectivos y el bienestar de la comunidad.',
       'Otros artículos que también se pueden destacar son el artículo 7, que establece el respeto por las diferencias, la resolución pacífica de los conflictos y además que promueve valores como la tolerancia, solidaridad y la responsabilidad, de igual manera el artículo 8 que incluye principios por la protección de la vida, la protección de la diversidad e integridad del ambiente y respeto por los animales como seres sintientes.',
-      'El propósito de esta guía es que cada visitante entienda que sus pequeñas acciones o adiciones tienen un efecto colectivo y un impacto en el ambiente.',
+      'El propósito de esta guía es que cada visitante entienda que sus pequeñas acciones o decisiones tienen un efecto colectivo y un impacto en el ambiente.',
     ],
   },
   {
