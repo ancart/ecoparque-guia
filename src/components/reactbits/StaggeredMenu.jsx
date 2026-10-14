@@ -186,8 +186,15 @@ export const StaggeredMenu = ({
     return tl;
   }, []);
 
+  const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   const playOpen = useCallback(() => {
     if (busyRef.current) return;
+    if (reduceMotion()) {
+      gsap.set([...preLayerElsRef.current, panelRef.current], { xPercent: 0, opacity: 1 });
+      gsap.set(panelRef.current?.querySelectorAll('.sm-panel-itemLabel') || [], { yPercent: 0, rotate: 0 });
+      return;
+    }
     busyRef.current = true;
     const tl = buildOpenTimeline();
     if (tl) {
@@ -208,6 +215,11 @@ export const StaggeredMenu = ({
     const panel = panelRef.current;
     const layers = preLayerElsRef.current;
     if (!panel) return;
+
+    if (reduceMotion()) {
+      gsap.set([...layers, panel], { xPercent: position === 'left' ? -100 : 100 });
+      return;
+    }
 
     const all = [...layers, panel];
     closeTweenRef.current?.kill();
@@ -238,6 +250,7 @@ export const StaggeredMenu = ({
   const animateIcon = useCallback(opening => {
     const icon = iconRef.current;
     if (!icon) return;
+    if (reduceMotion()) { gsap.set(icon, { rotate: opening ? 225 : 0 }); return; }
     spinTweenRef.current?.kill();
     if (opening) {
       spinTweenRef.current = gsap.to(icon, { rotate: 225, duration: 0.8, ease: 'power4.out', overwrite: 'auto' });
@@ -250,6 +263,7 @@ export const StaggeredMenu = ({
     opening => {
       const btn = toggleBtnRef.current;
       if (!btn) return;
+      if (reduceMotion()) { gsap.set(btn, { color: opening ? openMenuButtonColor : menuButtonColor }); return; }
       colorTweenRef.current?.kill();
       if (changeMenuColorOnOpen) {
         const targetColor = opening ? openMenuButtonColor : menuButtonColor;
@@ -280,6 +294,7 @@ export const StaggeredMenu = ({
   const animateText = useCallback(opening => {
     const inner = textInnerRef.current;
     if (!inner) return;
+    if (reduceMotion()) { setTextLines([opening ? 'Close' : 'Menu']); gsap.set(inner, { yPercent: 0 }); return; }
     textCycleAnimRef.current?.kill();
 
     const currentLabel = opening ? 'Menu' : 'Close';

@@ -46,7 +46,7 @@ const SplitText = ({
 
   useGSAP(
     () => {
-      if (!ref.current || !text || !fontsLoaded) return;
+      if (!ref.current || !text || !fontsLoaded || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       // Prevent re-animation if already completed
       if (animationCompletedRef.current) return;
       const el = ref.current;
@@ -151,7 +151,7 @@ const SplitText = ({
   const renderTag = () => {
     const style = {
       textAlign,
-      overflow: 'hidden',
+      overflow: 'visible',
       display: 'inline-block',
       whiteSpace: 'normal',
       wordWrap: 'break-word',

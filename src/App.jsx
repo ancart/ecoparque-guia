@@ -38,7 +38,12 @@ function WordTitle({ text, as: Tag = 'h1', className = '', id }) { return <Split
 function ChapterControls({ index, navigate }) {
   const previous = index > 0 ? guideSections[index - 1] : null
   const next = index < guideSections.length - 1 ? guideSections[index + 1] : null
-  return <nav className="chapter-controls" aria-label="Navegación entre capítulos"><button type="button" disabled={!previous} onClick={() => previous && navigate(previous.id)}>← <span>Anterior</span></button><button type="button" disabled={!next} onClick={() => next && navigate(next.id)}><span>Siguiente</span> →</button></nav>
+  return <nav className="chapter-controls" aria-label="Navegación entre capítulos"><button type="button" disabled={!previous} onClick={() => previous && navigate(previous.id)}>← <span>Anterior</span></button><button type="button" onClick={() => navigate(next?.id || 'galeria')}><span>{next ? 'Siguiente' : 'Explorar fotografías'}</span> →</button></nav>
+}
+
+function ServiceCard({ title, description, number, initiallyOpen }) {
+  const [open, setOpen] = useState(initiallyOpen)
+  return <details open={open} onToggle={(event) => setOpen(event.currentTarget.open)}><summary aria-expanded={open}><span>{String(number).padStart(2, '0')}</span>{title}<b aria-hidden="true">+</b></summary><p>{description}</p></details>
 }
 
 function ChapterView({ section, index, navigate, openPhoto }) {
@@ -46,19 +51,66 @@ function ChapterView({ section, index, navigate, openPhoto }) {
   return <article className={`chapter chapter--${section.id} ${section.id === 'situaciones' ? 'chapter--dark' : ''}`} aria-labelledby="chapter-title">
     <div className="chapter__eyebrow"><span>{String(index + 1).padStart(2, '0')} / 09</span><i />{section.eyebrow.replace(/^\d+ · /, '')}</div>
     <div className="chapter__layout"><div className="chapter__heading"><WordTitle text={section.title} as="h1" id="chapter-title" className="chapter__title" />{section.intro && <p className="chapter__intro">{section.intro}</p>}</div><button className="chapter__image" type="button" onClick={() => openPhoto(chapterMedia)} aria-label={`Ampliar fotografía: ${chapterMedia.alt}`}><img src={chapterMedia.src} alt={chapterMedia.alt} /><span>Ver fotografía ↗</span></button></div>
-    {section.cards ? <div className="services-list">{section.cards.map(([title, description], serviceIndex) => <details key={title} open={serviceIndex === 0}><summary><span>{String(serviceIndex + 1).padStart(2, '0')}</span>{title}<b aria-hidden="true">+</b></summary><p>{description}</p></details>)}</div> : <div className="chapter__text">{section.paragraphs.map((paragraph, paragraphIndex) => <p key={paragraphIndex}>{paragraph}</p>)}</div>}
+    {section.cards ? <div className="services-list">{[section.cards.slice(0, Math.ceil(section.cards.length / 2)), section.cards.slice(Math.ceil(section.cards.length / 2))].map((column, columnIndex) => <div className="services-column" key={columnIndex}>{column.map(([title, description], cardIndex) => <ServiceCard key={title} title={title} description={description} number={columnIndex * Math.ceil(section.cards.length / 2) + cardIndex + 1} initiallyOpen={columnIndex === 0 && cardIndex === 0} />)}</div>)}</div> : <div className="chapter__text">{section.paragraphs.map((paragraph, paragraphIndex) => <p key={paragraphIndex}>{paragraph}</p>)}</div>}
     <ChapterControls index={index} navigate={navigate} />
   </article>
 }
 
-function GalleryView({ openPhoto, onBack }) {
+function GalleryView({ openPhoto, onBack, onMaps = () => { window.location.hash = 'plano' } }) {
   const masonryItems = galleryItems.map((item, index) => ({ id: item.id, img: item.src, alt: item.alt, height: index % 3 === 0 ? 620 : index % 2 ? 420 : 520 }))
-  return <section className="resource-view gallery-view" aria-labelledby="gallery-title"><div className="resource-heading"><p>Archivo botánico</p><WordTitle text="Explorar fotografías" as="h1" id="gallery-title" className="resource-title" /><button type="button" className="text-button" onClick={onBack}>← Volver al capítulo</button></div><p className="resource-intro">Fotografías originales suministradas para esta guía. Selecciona una imagen para ampliarla.</p><div className="masonry-shell"><Masonry items={masonryItems} duration={0.55} stagger={0.045} animateFrom="bottom" scaleOnHover hoverScale={0.97} blurToFocus onItemSelect={(item) => openPhoto(galleryItems.find((photo) => photo.id === item.id))} /></div></section>
+  return <section className="resource-view gallery-view" aria-labelledby="gallery-title"><div className="resource-heading"><p>Archivo botánico</p><WordTitle text="Explorar fotografías" as="h1" id="gallery-title" className="resource-title" /><div className="resource-actions"><button type="button" className="text-button" onClick={onBack}>← Volver al capítulo</button><button type="button" className="text-button" onClick={onMaps}>Ver los planos originales →</button></div></div><p className="resource-intro">Fotografías originales suministradas para esta guía. Selecciona una imagen para ampliarla.</p><div className="masonry-shell"><Masonry items={masonryItems} duration={0.55} stagger={0.045} animateFrom="bottom" scaleOnHover hoverScale={0.97} blurToFocus onItemSelect={(item) => openPhoto(galleryItems.find((photo) => photo.id === item.id))} /></div></section>
 }
 
 function MapView({ onBack }) {
   const [zoom, setZoom] = useState(1)
-  return <section className="resource-view map-view" aria-labelledby="map-title"><div className="resource-heading"><p>Plano original</p><WordTitle text="Orientarse sin inventar rutas" as="h1" id="map-title" className="resource-title" /><button type="button" className="text-button" onClick={onBack}>← Volver al capítulo</button></div><p className="resource-intro">Plano original del Ecoparque Jardín Botánico Armando Dugand Gnecco. Usa los controles o el gesto táctil para revisar el esquema.</p><div className="map-controls" aria-label="Controles de ampliación del plano"><button type="button" onClick={() => setZoom((value) => Math.max(1, value - .25))} aria-label="Alejar plano">−</button><output aria-live="polite">{Math.round(zoom * 100)}%</output><button type="button" onClick={() => setZoom((value) => Math.min(2.5, value + .25))} aria-label="Acercar plano">+</button></div><div className="map-viewport"><img src={media.map.src} alt={media.map.alt} style={{ width: `${zoom * 100}%` }} /></div></section>
+  const [mapIndex, setMapIndex] = useState(0)
+  const viewport = useRef(null)
+  const touchStart = useRef(null)
+  const pinchStart = useRef(null)
+  useEffect(() => {
+    const node = viewport.current
+    if (!node) return undefined
+    const distance = (touches) => Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY)
+    const onStart = (event) => {
+      if (event.touches.length === 2) {
+        pinchStart.current = { distance: distance(event.touches), zoom }
+        touchStart.current = null
+      }
+    }
+    const onMove = (event) => {
+      if (!pinchStart.current || event.touches.length !== 2) return
+      event.preventDefault()
+      const scaled = pinchStart.current.zoom * distance(event.touches) / pinchStart.current.distance
+      setZoom(Math.max(1, Math.min(3, Math.round(scaled * 4) / 4)))
+    }
+    const onEnd = (event) => { if (event.touches.length < 2) pinchStart.current = null }
+    node.addEventListener('touchstart', onStart, { passive: true })
+    node.addEventListener('touchmove', onMove, { passive: false })
+    node.addEventListener('touchend', onEnd, { passive: true })
+    return () => {
+      node.removeEventListener('touchstart', onStart)
+      node.removeEventListener('touchmove', onMove)
+      node.removeEventListener('touchend', onEnd)
+    }
+  }, [zoom])
+  const maps = [media.map, media.map2007]
+  const currentMap = maps[mapIndex]
+  const changeMap = (nextIndex) => {
+    setMapIndex((nextIndex + maps.length) % maps.length)
+    setZoom(1)
+    viewport.current?.scrollTo({ left: 0, top: 0, behavior: 'instant' })
+  }
+  const handleMapKey = (event) => {
+    if (event.key === 'ArrowLeft') { event.preventDefault(); changeMap(mapIndex - 1) }
+    if (event.key === 'ArrowRight') { event.preventDefault(); changeMap(mapIndex + 1) }
+  }
+  const handleTouchEnd = (event) => {
+    if (!touchStart.current || zoom !== 1) return
+    const delta = event.changedTouches[0].clientX - touchStart.current.x
+    if (Math.abs(delta) > 70 && Math.abs(event.changedTouches[0].clientY - touchStart.current.y) < 80) changeMap(mapIndex + (delta < 0 ? 1 : -1))
+    touchStart.current = null
+  }
+  return <section className="resource-view map-view" aria-labelledby="map-title"><div className="resource-heading"><p>Planos originales</p><WordTitle text="Orientarse sin inventar rutas" as="h1" id="map-title" className="resource-title" /><button type="button" className="text-button" onClick={onBack}>← Volver al capítulo</button></div><p className="resource-intro">Consulta los planos originales del Ecoparque Jardín Botánico Armando Dugand Gnecco.</p><div className="map-switcher" aria-label="Seleccionar plano"><button type="button" onClick={() => changeMap(mapIndex - 1)} aria-label="Plano anterior">← Anterior</button><span aria-live="polite">Plano de {currentMap.year} · {mapIndex + 1} / 2</span><button type="button" onClick={() => changeMap(mapIndex + 1)} aria-label="Plano siguiente">Siguiente →</button></div><div className="map-controls" aria-label="Controles de ampliación del plano"><button type="button" disabled={zoom === 1} onClick={() => setZoom((value) => Math.max(1, value - .25))} aria-label="Alejar plano">−</button><output aria-live="polite">{Math.round(zoom * 100)}%</output><button type="button" disabled={zoom === 3} onClick={() => setZoom((value) => Math.min(3, value + .25))} aria-label="Acercar plano">+</button><button type="button" className="map-reset" onClick={() => { setZoom(1); viewport.current?.scrollTo({ left: 0, top: 0 }) }}>Restablecer 100 %</button></div><div className="map-viewport" ref={viewport} tabIndex={0} aria-label={`Visor del plano de ${currentMap.year}. Usa las flechas izquierda y derecha para cambiar de plano.`} onKeyDown={handleMapKey} onTouchStart={(event) => { if (event.touches.length === 1) touchStart.current = { x: event.touches[0].clientX, y: event.touches[0].clientY } }} onTouchEnd={handleTouchEnd}><img src={currentMap.src} alt={currentMap.alt} style={{ width: `${zoom * 100}%` }} draggable={false} /></div><p className="map-caption">Plano original del Ecoparque Jardín Botánico Armando Dugand Gnecco — {currentMap.year}{mapIndex === 1 && <small>Ferrer y González (2007)</small>}</p><div className="map-indicators" aria-label="Plano activo">{maps.map((item, index) => <button key={item.year} type="button" aria-label={`Mostrar plano de ${item.year}`} aria-current={mapIndex === index ? 'true' : undefined} onClick={() => changeMap(index)} />)}</div></section>
 }
 
 function PhotoDialog({ photo, close }) {
@@ -71,7 +123,7 @@ function PhotoDialog({ photo, close }) {
     return () => window.removeEventListener('keydown', handler)
   }, [photo, close])
   if (!photo) return null
-  return <div className="dialog-backdrop" role="presentation" onMouseDown={close}><section className="photo-dialog" role="dialog" aria-modal="true" aria-label="Fotografía ampliada" onMouseDown={(event) => event.stopPropagation()}><button ref={closeButton} type="button" className="dialog-close" onClick={close} aria-label="Cerrar fotografía">×</button><img src={photo.src} alt={photo.alt} /><footer><span>{photo.origin}</span></footer></section></div>
+  return <div className="dialog-backdrop" role="presentation" onMouseDown={close}><section className="photo-dialog" role="dialog" aria-modal="true" aria-label="Fotografía ampliada" onMouseDown={(event) => event.stopPropagation()}><button ref={closeButton} type="button" className="dialog-close" onClick={close} aria-label="Cerrar fotografía">×</button><img src={photo.src} alt={photo.alt} /></section></div>
 }
 
 function App() {

@@ -131,6 +131,7 @@ const Masonry = ({
 
   useLayoutEffect(() => {
     if (!imagesReady) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     grid.forEach((item, index) => {
       const selector = `[data-key="${item.id}"]`;
@@ -141,7 +142,9 @@ const Masonry = ({
         height: item.h
       };
 
-      if (!hasMounted.current) {
+      if (reduceMotion) {
+        gsap.set(selector, { ...animationProps, opacity: 1, filter: 'blur(0px)', scale: 1 });
+      } else if (!hasMounted.current) {
         const initialPos = getInitialPosition(item, index);
         const initialState = {
           opacity: 0,
@@ -175,6 +178,7 @@ const Masonry = ({
   }, [grid, imagesReady, stagger, animateFrom, blurToFocus, duration, ease]);
 
   const handleMouseEnter = (e, item) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const element = e.currentTarget;
     const selector = `[data-key="${item.id}"]`;
 
@@ -198,6 +202,7 @@ const Masonry = ({
   };
 
   const handleMouseLeave = (e, item) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const element = e.currentTarget;
     const selector = `[data-key="${item.id}"]`;
 

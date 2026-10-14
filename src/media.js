@@ -61,6 +61,14 @@ export const media = {
     alt: 'Plano original del Ecoparque Jardín Botánico Armando Dugand Gnecco',
     orientation: 'mapa',
     origin: 'Plano original entregado con el proyecto',
+    year: 2026,
+  },
+  map2007: {
+    src: `${supplied}plano-2007.jpg`,
+    alt: 'Plano original del Ecoparque Jardín Botánico Armando Dugand Gnecco de 2007',
+    orientation: 'mapa',
+    origin: 'Plano de Ferrer y González (2007)',
+    year: 2007,
   },
 }
 

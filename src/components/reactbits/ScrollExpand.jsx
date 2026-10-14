@@ -67,8 +67,8 @@ const ScrollExpand = ({
 
     const e = smoothstep(0, 1, p);
 
-    const w = c.startWidth + (100 - c.startWidth) * e;
-    const h = c.startHeight + (100 - c.startHeight) * e;
+    const w = Math.max(96, c.startWidth) + (100 - Math.max(96, c.startWidth)) * e;
+    const h = Math.max(92, c.startHeight) + (100 - Math.max(92, c.startHeight)) * e;
     const ix = Math.max(0, (100 - w) / 2);
     const iy = Math.max(0, (100 - h) / 2);
     const r = c.startRadius + (c.endRadius - c.startRadius) * e;
@@ -76,7 +76,7 @@ const ScrollExpand = ({
 
     media.style.transform = `scale(${c.mediaZoom + (1 - c.mediaZoom) * e})`;
 
-    if (scrimRef.current) scrimRef.current.style.opacity = `${c.overlayScrim * e}`;
+    if (scrimRef.current) scrimRef.current.style.opacity = '0.4';
 
     if (titleRef.current) {
       const out = smoothstep(0.4, 0.88, p);
@@ -113,7 +113,7 @@ const ScrollExpand = ({
 
     const measure = () => {
       const c = propsRef.current;
-      stageH = c.useWindowScroll ? window.innerHeight : root.clientHeight;
+      stageH = root.clientHeight;
       if (stageH <= 0) return;
       stage.style.height = `${stageH}px`;
       track.style.height = `${stageH * (1 + Math.max(0, c.scrollDistance) + Math.max(0, c.holdDistance))}px`;
@@ -124,7 +124,7 @@ const ScrollExpand = ({
 
     const readProgress = () => {
       const c = propsRef.current;
-      if (!c.enabled) return 1;
+      if (!c.enabled || reduceMotion) return 1;
       const span = stageH * Math.max(0.01, c.scrollDistance);
       if (c.useWindowScroll) {
         const top = track.getBoundingClientRect().top;
