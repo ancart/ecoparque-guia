@@ -12,7 +12,7 @@ export const guideSections = [
   {
     id: 'historia',
     eyebrow: '02 · Contexto',
-    title: '¿QUÉ ES? (CON UN POQUITO DE HISTORIA)',
+    title: 'HISTORIA',
     paragraphs: [
       'El EcoParque Jardín Botánico Armando Dugand se encuentra ubicado en el barrio La Victoria, al suroriente de Barranquilla, cuenta con una extensión de 7 hectáreas. Se le considera como reserva debido a su ubicación estratégica, por donde fluyen diversos cuerpos de agua que propician un ambiente favorable para diversas plantas animales que en el habitan. Este jardín fue declarado en 2018 EcoParque y reserva natural por el consejo de Barranquilla, según el Plan de Desarrollo de 2016-2019 de Barranquilla Capital Vida. Es considerado como uno de los espacios ecológicos más importantes del Atlántico.',
     ],
